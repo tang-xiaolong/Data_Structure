@@ -18,7 +18,7 @@ int main(void)
 		printf("%d ",a[i]);
 	}
 	putchar('\n');
-	printf("请输入你要查找的数：");
+	printf("请输入您要查找的数：");
 	scanf("%d",&val);
 	pos = ErFenFind(a,val);
 	if(-1 != pos)
