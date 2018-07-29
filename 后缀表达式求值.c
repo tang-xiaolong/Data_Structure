@@ -8,7 +8,7 @@ int main(void)
 	char shizi[20];
 	scanf("%s",shizi);
 	result = com(shizi);
-	printf("���Ϊ��%d\n",result);
+	printf("结果为：%d\n",result);
 	return 0;
 }
 int op(int a,char Op,int b)
@@ -36,11 +36,11 @@ int com(char exp[])
 
 	for(i = 0;exp[i] != '\0';++i)
 	{
-		if(exp[i] >= '0' && exp[i] <= '9')//��ǰ������
+		if(exp[i] >= '0' && exp[i] <= '9')//当前是数字，压栈
 		{
 			PushI(myS,exp[i]-'0');
 		}
-		else
+		else//碰到符号，则弹出两个数运算，算完再将结果入栈
 		{
 			Op = exp[i];
 			b = PopI(myS);
