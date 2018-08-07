@@ -34,7 +34,7 @@ void DFSNotConnect(AGraph *G);
 void DFS2(AGraph *G,int v);//非递归深度优先遍历
 void BFS(AGraph *G,int v);//广度优先遍历	Breadth First Search
 
-//连通图输入示例：  6 8 1 2 3 4 5 6 1 2 1 3 1 4 2 4 3 4 3 5 4 6 5 6
+//连通图输入示例：  7 9 1 2 3 4 5 6 7 1 2 1 3 1 4 2 4 3 4 3 5 4 6 5 6 6 7
 //非连通图输入示例：6 6 1 2 3 4 5 6 1 2 1 3 1 4 2 4 3 4 5 6
 int main(void)
 {
@@ -145,6 +145,7 @@ void BFS(AGraph *G,int v)
 	
 	queue[n++] = v;
 	visit2[v] =  1;
+	printf("%d",G->adjList[v-1].data);
 	while(n != f)
 	{
 		i = queue[f++];//取出一个元素
@@ -154,6 +155,7 @@ void BFS(AGraph *G,int v)
 			if(!visit2[p->adjVex])
 			{
 				visit2[p->adjVex] = 1;
+				printf("%d",G->adjList[p->adjVex-1].data);
 				queue[n++] = p->adjVex;
 			}
 			p = p->nextArc;
