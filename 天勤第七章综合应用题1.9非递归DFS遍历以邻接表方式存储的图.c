@@ -23,12 +23,15 @@ typedef struct
 
 
 void CreateAGraph(AGraph *G);
-void DFS(AGraph *G,int v);
+void DFS1(AGraph *G,int v);//方法一   好理解一些，但是会破环原本的顺序
+void DFS2(AGraph *G,int v);//会按照邻接表的顺序输出，更合适
 int main(void)
 {
 	AGraph G;
 	CreateAGraph(&G);
-	DFS(&G,0);
+	DFS1(&G,0);
+	putchar('\n');
+	DFS2(&G,0);
 	putchar('\n');
 	return 0;
 }
@@ -55,7 +58,7 @@ void CreateAGraph(AGraph *G)
 	}
 }
 
-void DFS(AGraph *G,int v)
+void DFS1(AGraph *G,int v)
 {
 	int set[maxSize] = {0};
 	int stack[maxSize];
@@ -76,6 +79,31 @@ void DFS(AGraph *G,int v)
 				stack[++top] = p->adjVex;
 			}
 			p = p->nextArc;
+		}
+	}
+}
+void DFS2(AGraph *G,int v)
+{
+	int set[maxSize] = {0};
+	int stack[maxSize];
+	int top = -1,i;
+	ArcNode *p;
+	stack[++top] = v;
+	set[v] = 1;
+	printf("%2d",v);
+	while(top != -1)
+	{
+		i = stack[top];//只读不取，后面检验了自己连接的节点都访问了再取
+		p = G->adjList[i].firstArc;
+		while(p != NULL && set[p->adjVex] == 1)//一直往后找，找到空节点或者是一个没有被访问的节点
+			p = p->nextArc;
+		if(p == NULL)//如果p已经到了末尾了，证明当前的那个节点所连接的节点都被访问过了
+			--top;
+		else
+		{//这是一个未被访问过的节点  入栈  标记  并访问
+			stack[++top] = p->adjVex;
+			set[p->adjVex] = 1;
+			printf("%2d",p->adjVex);
 		}
 	}
 }
