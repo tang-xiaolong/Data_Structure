@@ -66,7 +66,7 @@ FILE *result1,*result2,*result3,*result4;
 void swap(struct cnc*x, struct cnc*y);
 void Ques1();
 void Ques2();
-void Init2(int *Num);
+void Init2();
 void Init1();
 void RepeatRun();//重调度算法
 void ProspectRun();//预调度算法
@@ -80,8 +80,7 @@ void Require(struct cnc *c,int id);
 void Print(int d);//打印整个界面
 void Pos(int x, int y);//设置光标位置，决定要在什么位置输出
 
-double Run2();
-void CopyFile1(FILE *fp1,FILE *fp2);
+void Run2();
 int main(void)
 {
 	srand((unsigned)time(NULL));
@@ -349,7 +348,7 @@ void ProspectRun()
 	for(i = 0;i < N;++i)
 		printf("%d号CNC的效率为%.2lf%%\n",CNC[i].id,CNC[i].waitTime/28800.0*100);
 }
-double Run2()
+void Run2()
 {
 	//先给所有的1号工作台加上生料  然后在原地等候
 	//只要有一号发出请求，则去给它换料
@@ -448,7 +447,6 @@ double Run2()
 					{
 						CNC[i].isWork = 0;//当前是没工作了
 						//RGV.NeedAdd[RGV.sumCommend++] = &CNC[i];//往我后面加就是了，当我检测到本来是没命令到接受命令，则对当前列表排序
-						
 						if(CNC[i].workId == 1)
 							DoubleTemp1[Double1++] = &CNC[i];
 						else
@@ -496,6 +494,8 @@ double Run2()
 			}
 			else if(RGV.isClean == 1 && RGV.cleanTime <= 0)
 			{
+				//清洗完成了 写入函数洛
+				fprintf(result2,"%d\t%d\t%d%d\t%d\t%d\n",RGV.NeedAdd[RGV.nowCommendId]->firstid,RGV.NeedAdd[RGV.nowCommendId]->UpTime,RGV.NeedAdd[RGV.nowCommendId]->DownTime,RGV.NeedAdd[RGV.nowCommendId]->id,RGV.NeedAdd[RGV.nowCommendId]->SUpTime,RGV.Time);
 				RGV.isClean = 0;
 				RGV.cleanTime = CleanTime;
 				RGV.successCount++;
@@ -572,12 +572,6 @@ double Run2()
 				}
 				else if(RGV.needMove == 1 && RGV.moveTime == 0)
 				{//已经移动到了
-					//如果不需要等待   则看是几号刀具如果是1号刀具，则更新它的下料开始时间
-					RGV.NeedAdd[RGV.nowCommendId]->UpTime;
-					RGV.NeedAdd[RGV.nowCommendId]->DownTime;
-					RGV.NeedAdd[RGV.nowCommendId]->SDownTime;
-					RGV.NeedAdd[RGV.nowCommendId]->SUpTime;
-
 					RGV.needMove = 0;
 					RGV.nowPos =  RGV.NeedAdd[RGV.nowCommendId]->pos;
 					//确定是否要等待
@@ -587,7 +581,18 @@ double Run2()
 						RGV.isShang = 1;
 						RGV.NeedAdd[RGV.nowCommendId]->isShang = 1;
 						//这个时候  就是把当前的熟料下来的时间  即需要写入文件了
-						fprintf(result2,"%d\t%d\t%d\n",RGV.NeedAdd[RGV.nowCommendId]->id,RGV.NeedAdd[RGV.nowCommendId]->UpTime,RGV.Time);
+						if(RGV.NeedAdd[RGV.nowCommendId]->workId == 1)//1号被加工完成  
+						{
+							RGV.NeedAdd[RGV.nowCommendId]->DownTime = RGV.Time;//把下料时间补上
+							RGV.NeedAdd[RGV.nowCommendId]->firstid = RGV.NeedAdd[RGV.nowCommendId]->id;
+						}
+						else
+						{
+							//2号工序完成啦，写入文件
+							RGV.NeedAdd[RGV.nowCommendId]->SDownTime = RGV.Time;
+							//fprintf(result2,"%d\t%d\t%d%d\t%d\t%d\n",RGV.NeedAdd[RGV.nowCommendId]->firstid,RGV.NeedAdd[RGV.nowCommendId]->UpTime,RGV.NeedAdd[RGV.nowCommendId]->DownTime,RGV.NeedAdd[RGV.nowCommendId]->id,RGV.NeedAdd[RGV.nowCommendId]->SUpTime,RGV.Time);
+														
+						}
 						RGV.shangTime = RGV.NeedAdd[RGV.nowCommendId]->shangTime;
 					}
 					else
@@ -603,12 +608,12 @@ double Run2()
 				}
 				else if(RGV.needWait == 1 && RGV.waitTime == 0)
 				{
-					//等待时间已经到了  则开始上料
+					//等待时间已经到了  则开始上料   
 					RGV.needWait = 0;
 					RGV.isShang =  1;
 					RGV.NeedAdd[RGV.nowCommendId]->isShang = 1;
 						//这个时候  就是把当前的熟料下来的时间  即需要写入文件了
-						fprintf(result1,"%d\t%d\t%d\n",RGV.NeedAdd[RGV.nowCommendId]->id,RGV.NeedAdd[RGV.nowCommendId]->UpTime,RGV.Time);
+					//fprintf(result1,"%d\t%d\t%d\n",RGV.NeedAdd[RGV.nowCommendId]->id,RGV.NeedAdd[RGV.nowCommendId]->UpTime,RGV.Time);
 					RGV.shangTime = RGV.NeedAdd[RGV.nowCommendId]->shangTime;
 				}
 				else if(RGV.isShang ==  1 && RGV.shangTime > 0)//在上料了
@@ -620,7 +625,7 @@ double Run2()
 					//上下料完成
 					//告知那个CNC  你已经被上了新的生料
 					RGV.NeedAdd[RGV.nowCommendId]->isShang = 0;
-					RGV.NeedAdd[RGV.nowCommendId]->UpTime = RGV.Time;
+					//RGV.NeedAdd[RGV.nowCommendId]->UpTime = RGV.Time;
 					RGV.NeedAdd[RGV.nowCommendId]->isWork = 1;
 					RGV.NeedAdd[RGV.nowCommendId]->remainTime = RGV.NeedAdd[RGV.nowCommendId]->needTime;
 
@@ -632,6 +637,13 @@ double Run2()
 						RGV.isShang = 0;
 						RGV.isClean = 0;
 						RGV.cleanTime = CleanTime;
+						//把现在这个的时间还回来
+						RGV.NeedAdd[RGV.nowCommendId+1]->UpTime = RGV.NeedAdd[RGV.nowCommendId]->UpTime;
+						RGV.NeedAdd[RGV.nowCommendId+1]->DownTime = RGV.NeedAdd[RGV.nowCommendId]->DownTime;
+						RGV.NeedAdd[RGV.nowCommendId+1]->firstid = RGV.NeedAdd[RGV.nowCommendId]->firstid;
+						RGV.NeedAdd[RGV.nowCommendId]->UpTime = RGV.NeedAdd[RGV.nowCommendId+1]->DownTime;
+						RGV.NeedAdd[RGV.nowCommendId]->firstid = RGV.NeedAdd[RGV.nowCommendId]->id;
+
 						RGV.nowCommendId++;
 						RGV.testNum = 2;//你要去做2号工序了
 						if(RGV.sumCommend >1)//之前给你分配了两道工序  则比较自己的和云端的
@@ -659,7 +671,15 @@ double Run2()
 					}
 					else
 					{//2号  则开始清洗
+						RGV.NeedAdd[RGV.nowCommendId]->SUpTime = RGV.Time;
 						RGV.isShang = 0;
+						if(RGV.NeedAdd[RGV.nowCommendId]->isFirst == 0)//如果是第一次上下料，则没有清洗时间
+						{
+							RGV.NeedAdd[RGV.nowCommendId]->isFirst = 1;
+							//我可以复制当前的一个
+							continue;
+						}
+						//RGV.NeedAdd[RGV.nowCommendId]->SUpTime = RGV.Time;
 						RGV.isClean = 1;
 						RGV.cleanTime = CleanTime;
 					}
@@ -667,11 +687,11 @@ double Run2()
 			}
 		}
 	}
-	//printf("\n共完成%d个成品\n",RGV.successCount);
-	//printf("所有CNC一共等待了%d秒   最后成品时间为%d秒  无效时间为%d秒  最后成品出炉时工作的CNC台数为%d台\n",RGV.waitTime,RGV.endTime,28800-RGV.endTime,count);
-	//for(i = 0;i < N;++i)
-	//	printf("%d号CNC的效率为%.2lf%%\n",CNC[i].id,CNC[i].waitTime/28800.0*100);
-	return RGV.waitTime*0.5+(28800-RGV.endTime)*count*0.5;
+	printf("\n共完成%d个成品\n",RGV.successCount);
+	printf("所有CNC一共等待了%d秒   最后成品时间为%d秒  无效时间为%d秒 最后成品出炉时工作的CNC台数为%d台\n",RGV.waitTime,RGV.endTime,28800-RGV.endTime,count);
+	for(i = 0;i < N;++i)
+		printf("%d号CNC的效率为%.2lf%%\n",CNC[i].id,CNC[i].waitTime/28800.0*100);
+
 }
 /*
 void Run2()
@@ -2409,89 +2429,19 @@ void Require(struct cnc *c,int id)
 }
 void Ques2()
 {
-	double Value = 99999,tempValue;
-	int id1[N],Id[N];
-	int z,x,c,v,b,n,m,l,i;
-	FILE *result2Last;
 	result2 = fopen("result2.txt","w");
-	//把所有刀片的组合弄出来
-	/*
-	for(z = 0;z < 2;++z)
-	{
-		id1[0] = z+1;
-		for(x = 0;x < 2;++x)
-		{
-			id1[1] = x+1;
-			for(c = 0;c < 2;++c)
-			{
-				id1[2] = c+1;
-				for(v = 0;v < 2;++v)
-				{
-					id1[3] = v+1;
-					for(b = 0;b < 2;++b)
-					{
-						id1[4] = b+1;
-						for(n = 0;n < 2;++n)
-						{
-							id1[5] = n+1;
-							for(m = 0;m < 2;++m)
-							{
-								id1[6] = m+1;
-								for(l = 0;l < 2;++l)
-								{
-									id1[7] = l+1;
-									result2 = fopen("result2.txt","w");
-									Init2(id1);//此时已经是一种刀片分配了  计算一次
-									tempValue = Run2();
-									fclose(result2);
-									if(tempValue < Value)//比之前更好   把当前的方案记录下来
-									{
-										//写入文件
-										result2 = fopen("result2.txt","r");
-										result2Last = fopen("result2Last.txt","w");
-										CopyFile1(result2,result2Last);
-										fclose(result2);
-										fclose(result2Last);
-										for(i = 0;i < N;++i)
-										{
-											Id[i] = id1[i];
-										}
-										Value = tempValue;
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	result2Last = fopen("result2Last.txt","a");
-	fprintf(result2Last,"\n");
-	for(i = 0;i < N;++i)
-		fprintf(result2Last,"%d\t",Id[i]);
-	fclose(result2Last);
-	*/
-	Init2(id1);
+	Init2();
 	Run2();
 	fclose(result2);
 }
-void CopyFile1(FILE *fp1,FILE *fp2)
-{
-	char c;
-	while((c = fgetc(fp1)) != EOF)
-	{
-		fputc(c,fp2);
-	}
-}
-void Init2(int *Num)
+void Init2()
 {
 	int i = 0;
 	int sToM, mToM, oneTime, firstTime, secondTime, oddTime, evenTime, cleanTime;
 	FILE *fp = fopen("data.txt", "r");
 	fscanf(fp, "%d%d%d%d%d%d%d%d", &sToM, &mToM, &oneTime, &firstTime, &secondTime, &oddTime, &evenTime, &cleanTime);//从静止到移动一个单元时间 移动状态移动一个单元 CNN加工一道工序 CNN加工第一道工序时间  CNN加工第二道工序时间  奇数CNN上下料时间 偶数CNN上下料时间 RGV清洗时间
 	//printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",sToM,mToM,oneTime,firstTime,secondTime,oddTime,evenTime,cleanTime);
-	//fscanf(fp, "%d%d%d%d%d%d%d%d", &sToM, &mToM, &oneTime, &firstTime, &secondTime, &oddTime, &evenTime, &cleanTime);
+	fscanf(fp, "%d%d%d%d%d%d%d%d", &sToM, &mToM, &oneTime, &firstTime, &secondTime, &oddTime, &evenTime, &cleanTime);
 	//fscanf(fp, "%d%d%d%d%d%d%d%d", &sToM, &mToM, &oneTime, &firstTime, &secondTime, &oddTime, &evenTime, &cleanTime);
 	RGV.isClean = 1;
 	RGV.remainTime = 0;
@@ -2542,7 +2492,6 @@ void Init2(int *Num)
 		{
 			CNC[i].shangTime = oddTime;
 		}
-		//CNC[i].workId = Num[i];
 		RGV.NeedAdd[i] = &CNC[i];
 		RGV.sumCommend++;
 	}
