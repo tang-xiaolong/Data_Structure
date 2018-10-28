@@ -10,9 +10,9 @@ int main(void)
 	gets(match);
 	flag = Calculate(target,match);
 	if(-1 == flag)
-		printf("Ã»ÓĞÔÚÄ¿±ê´®ÖĞÕÒµ½¸Ã×Ó´®£¡\n");
+		printf("æ²¡æœ‰åœ¨ç›®æ ‡ä¸²ä¸­æ‰¾åˆ°è¯¥å­ä¸²ï¼\n");
 	else
-		printf("ÔÚÄ¿±ê´®ÖĞÕÒµ½ÁË×Ó´®£¬Î»ÓÚ%dµÄÎ»ÖÃ\n",flag);
+		printf("åœ¨ç›®æ ‡ä¸²ä¸­æ‰¾åˆ°äº†å­ä¸²ï¼Œä½äº%dçš„ä½ç½®\n",flag);
 	return 0;
 }
 int Calculate(char *target,char *match)
@@ -25,7 +25,7 @@ int Calculate(char *target,char *match)
 	GetNext(match,next);
 	while(i < len1 && j < len2)
 	{
-		//´Ë´¦jµÄÅĞ¶ÏÌõ¼şĞèÒªÓëÇónextÊı×é³õÖµÏàÍ¬
+		//æ­¤å¤„jçš„åˆ¤æ–­æ¡ä»¶éœ€è¦ä¸æ±‚nextæ•°ç»„åˆå€¼ç›¸åŒ
 		if(j == -1 || target[i] == match[j])
 		{
 			++i;
@@ -36,23 +36,23 @@ int Calculate(char *target,char *match)
 			j = next[j];	
 		}
 	}
-	if(j == len2)//µ½ÁËÄ©Î²ÁË³öÀ´µÄ
+	if(j == len2)//åˆ°äº†æœ«å°¾äº†å‡ºæ¥çš„
 		return i - len2;
 	else
 		return -1;
 }
 void GetNext(char *info,int *next)
 {
-	int i = 0,j = -1;//jµÄ³õÖµºÍnextµÚÒ»¸öÖµÏàÍ¬¡£iÒª±Èj´óÒ»£¬ÇÒ±ØĞë¸ø³önext[i]µÄ³õÖµ
+	int i = 0,j = -1;//jçš„åˆå€¼å’Œnextç¬¬ä¸€ä¸ªå€¼ç›¸åŒã€‚iè¦æ¯”jå¤§ä¸€ï¼Œä¸”å¿…é¡»ç»™å‡ºnext[i]çš„åˆå€¼
 	int len = strlen(info);
 	next[0] = -1;
-	while(i < len)
+	while(i < len - 1)
 	{
 		if(j == -1 || info[j] == info[i])
 		{
 			++i;
 			++j;
-			//¸Ä½ø //±¾À´±£´æµÄÊÇÊ§ÅäµÄÊ±ºòÓ¦¸Ã»¬µ½µÄÎ»ÖÃ£¬µ«ÊÇ¼ÈÈ»Á½ÕßÏàµÈ£¬»¬µ½ÄÇ¸öÎ»ÖÃ¿Ï¶¨Ò²ÊÇ´íÎóµÄ£¬ËùÒÔÖ±½Ó»¬µ½ÄÇ¸öÎ»ÖÃ±£´æµÄÎ»ÖÃ
+			//æ”¹è¿› //æœ¬æ¥ä¿å­˜çš„æ˜¯å¤±é…çš„æ—¶å€™åº”è¯¥æ»‘åˆ°çš„ä½ç½®ï¼Œä½†æ˜¯æ—¢ç„¶ä¸¤è€…ç›¸ç­‰ï¼Œæ»‘åˆ°é‚£ä¸ªä½ç½®è‚¯å®šä¹Ÿæ˜¯é”™è¯¯çš„ï¼Œæ‰€ä»¥ç›´æ¥æ»‘åˆ°é‚£ä¸ªä½ç½®ä¿å­˜çš„ä½ç½®
 			if(info[i]==info[j])
 				next[i] = next[j];
 			else
