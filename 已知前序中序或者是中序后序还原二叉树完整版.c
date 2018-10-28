@@ -48,7 +48,7 @@ void MidTreaver(Node *p)
 }
 int GetIndex(int *a,int value)
 {
-	//Ê×ÏÈ±£Ö¤ÁËÕâ¸öÖµ¿Ï¶¨´æÔÚÓÚÕâ¸öÊı×éÀï£¬ÇÒÊı×éµÄÖµ¾ù²»Í¬
+	//é¦–å…ˆä¿è¯äº†è¿™ä¸ªå€¼è‚¯å®šå­˜åœ¨äºè¿™ä¸ªæ•°ç»„é‡Œï¼Œä¸”æ•°ç»„çš„å€¼å‡ä¸åŒ
 	int i = 0;
 	while(a[i] != value)
 		++i;
@@ -56,16 +56,16 @@ int GetIndex(int *a,int value)
 }
 Node *GetTree(int *pre,int *mid,int *now,int l,int r)
 {
-	//Èôl < r  ÔòÉêÇëÄÚ´æ·ÖÅäÖµ£¬·ñÔòÖ±½ÓÁîÆäÎªNULL
+	//è‹¥l < r  åˆ™ç”³è¯·å†…å­˜åˆ†é…å€¼ï¼Œå¦åˆ™ç›´æ¥ä»¤å…¶ä¸ºNULL
 	Node *p = NULL;
 	int k = 0;
 	if(l <= r)
 	{
-		p = (Node *)malloc(sizeof(Node));//ÉêÇëÒ»¸ö½Úµã ×÷Îª¸ù½Úµã
+		p = (Node *)malloc(sizeof(Node));//ç”³è¯·ä¸€ä¸ªèŠ‚ç‚¹ ä½œä¸ºæ ¹èŠ‚ç‚¹
 		p->data = pre[*now];
-		k = GetIndex(mid,pre[*now]);//»ñÈ¡Ç°ĞòÖĞµ±Ç°Î»ÖÃµÄÖµÔÚÖĞĞòµÄÄÄ¸öÎ»ÖÃ
-		//Èç¹ûÓĞ×ó×ÓÊ÷£¬now++
-		//ÔõÃ´ÅĞ¶ÏÓĞÃ»ÓĞ×ó×ÓÊ÷ÄØ£¿
+		k = GetIndex(mid,pre[*now]);//è·å–å‰åºä¸­å½“å‰ä½ç½®çš„å€¼åœ¨ä¸­åºçš„å“ªä¸ªä½ç½®
+		//å¦‚æœæœ‰å·¦å­æ ‘ï¼Œnow++
+		//æ€ä¹ˆåˆ¤æ–­æœ‰æ²¡æœ‰å·¦å­æ ‘å‘¢ï¼Ÿ
 		if(k > l)
 			*now = *now +1,p->lc = GetTree(pre,mid,now,l,k-1);
 		else
