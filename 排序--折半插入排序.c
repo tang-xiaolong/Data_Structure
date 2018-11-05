@@ -5,9 +5,9 @@ void Print(int * arr,char info[]);
 int main(void)
 {
 	int num[maxSize] = {49,38,65,97,76,13,27,49};
-	Print(num,"Ô­Êı×éÎª£º");
+	Print(num,"åŸæ•°ç»„ä¸ºï¼š");
 	Sort(num);
-	Print(num,"ÅÅĞòºóÎª£º");
+	Print(num,"æ’åºåä¸ºï¼š");
 	return 0;
 }
 
@@ -26,13 +26,13 @@ void Sort(int *arr)
 	int low = 1,high = 1,mid,temp;
 	for(i = 1;i < maxSize;++i)
 	{
-		//½«µÚi¸öÎ»ÖÃÉÏµÄÊı²åÈëµ½Ò»¸öÒÑ¾­ÅÅºÃĞòµÄĞòÁĞÖĞ  ·Çµİ¼õ
+		//å°†ç¬¬iä¸ªä½ç½®ä¸Šçš„æ•°æ’å…¥åˆ°ä¸€ä¸ªå·²ç»æ’å¥½åºçš„åºåˆ—ä¸­  éé€’å‡
 		temp = arr[i];
 		low = 0,high = i-1;
 		while(low <= high)
 		{
 			mid = (low+high)/2;
-			if(arr[mid] > arr[i])//±ÈÄã´ó  Äã¾ÍÒªÈ¥ÎÒÇ°Ãæ
+			if(arr[mid] > arr[i])//æ¯”ä½ å¤§  ä½ å°±è¦å»æˆ‘å‰é¢
 			{
 				high = mid-1;
 			}
@@ -41,7 +41,7 @@ void Sort(int *arr)
 			else
 				break;
 		}
-		//mid¾ÍÊÇÒª·ÅµÄÎ»ÖÃ
+		//highå°±æ˜¯è¦æ”¾çš„ä½ç½®
 		for(j = i-1;j>=high+1;--j)
 			arr[j+1] = arr[j];
 		arr[high+1] = temp;
