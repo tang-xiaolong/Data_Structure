@@ -1,7 +1,8 @@
 #include<stdio.h>
-#include<Struct.h>
 int op(int a,char Op,int b);
 int com(char exp[]);
+
+//931-3*+82/+
 int main(void)
 {
 	int result = 0;
@@ -31,23 +32,23 @@ int op(int a,char Op,int b)
 int com(char exp[])
 {
 	int i,a,b,result;
-	PIS myS = InitI();
+	int stack[50],top = -1;
 	char Op;
 
 	for(i = 0;exp[i] != '\0';++i)
 	{
 		if(exp[i] >= '0' && exp[i] <= '9')//当前是数字，压栈
 		{
-			PushI(myS,exp[i]-'0');
+			stack[++top] = exp[i]-'0';
 		}
 		else//碰到符号，则弹出两个数运算，算完再将结果入栈
 		{
 			Op = exp[i];
-			b = PopI(myS);
-			a = PopI(myS);
+			b = stack[top--];
+			a = stack[top--];
 			result = op(a,Op,b);
-			PushI(myS,result);
+			stack[++top] = result;
 		}
 	}
-	return PopI(myS);
+	return stack[top--];
 }
