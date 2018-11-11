@@ -1,10 +1,9 @@
 #include<stdio.h>
-#include<struct.h>
 int main(void)
 {//9+(3-1)*3+8/2  
 	char input[100] = {'\0'},c,temp;
-	int i;
-	PCS p = InitC();
+	int i,top = -1;
+	char stack[50] = {'\0'};
 	scanf("%s",input);
 	for(i = 0;(c = input[i]) != '\0';++i)
 	{
@@ -14,41 +13,43 @@ int main(void)
 		{
 			//判断当前符号与栈顶符号优先级，自己高
 			if(c == '(')
-				PushC(p,c);
+			{
+				stack[++top] = c;
+			}
 			else if(c == ')')
 			{
-				while((c = PopC(p))!='(')
+				while((c = stack[top--])!='(')
 					putchar(c);
 			}
 			else
 			{
 				//判断自己与栈顶符号优先级强弱，若自己不高于它，将它出栈输出将自己入栈
-				if(EmptyC(p))//如果是空栈，直接入栈
-					PushC(p,c);
+				if(top == -1)//如果是空栈，直接入栈
+					stack[++top] = c;
 				else 
 				{
 					while(1)
 					{
-						temp = GetC(p);
+						temp = stack[top];
 						if(temp == '\0')
 						{
 							//(A+B)*D+E/(F+A*D)+C
-							PushC(p,c);
+							stack[++top] = c;
 							break;
 						}
 						if((c == '*'||c == '/') && (temp == '+'|| temp == '-'))
 						{
-							PushC(p,c);
+							stack[++top] = c;
 							break;
 						}
 						else if(temp == '(')
 						{
-							PushC(p,c);
+							stack[++top] = c;
 							break;
 						}
 						else
-						{//若是和里面的优先级一样，让栈里面的出来，同时，自己需要继续喝里面的进行比较看是否可以进栈
-							temp = PopC(p);
+						{
+							temp = stack[top--];
 							putchar(temp);
 						}
 					}
@@ -56,8 +57,8 @@ int main(void)
 			}
 		}
 	}
-	while((c = PopC(p)) != '\0')
-		putchar(c);
+	while(top != -1)
+		putchar(stack[top--]);
 	putchar('\n');
 	return 0;
 }
