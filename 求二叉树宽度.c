@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include<malloc.h>
-#include<malloc.h>
 typedef struct node
 {
 	char c;
@@ -23,9 +22,9 @@ int main(void)
 	PreGetValue(&tree);
 	//PreTreaverse(&tree);
 	//putchar('\n');
-	puts("²ã´Î±éÀú½á¹ûÈçÏÂ");
+	puts("å±‚æ¬¡éå†ç»“æœå¦‚ä¸‹");
 	weigth = GetWeigth(&tree);
-	printf("\nÕâ¿ÃÊ÷¿í¶ÈÎª£º%d\n",weigth);
+	printf("\nè¿™æ£µæ ‘å®½åº¦ä¸ºï¼š%d\n",weigth);
 	return 0;
 }
 
@@ -76,7 +75,7 @@ int GetWeigth(pTree p)
 	++rear;
 	while(front != rear)
 	{
-		//È¡³ö×Ô¼º£¬½«º¢×ÓÈëÕ»£¬²¢ÉèÖÃËüÃÇµÄ²ã
+		//å–å‡ºè‡ªå·±ï¼Œå°†å­©å­å…¥æ ˆï¼Œå¹¶è®¾ç½®å®ƒä»¬çš„å±‚
 		p = array[front].value;
 		nowCeng = array[front].ceng;
 		++front;
@@ -100,11 +99,11 @@ int GetWeigth(pTree p)
 	for(i = 0;i < count;++i)
 	{
 		if(array[i].ceng == nowCeng)
-		{//Èç¹ûÕâ¸ö²ã´ÎºÍÖ®Ç°µÄ²ã´ÎÏàÍ¬£¬k++
+		{//å¦‚æœè¿™ä¸ªå±‚æ¬¡å’Œä¹‹å‰çš„å±‚æ¬¡ç›¸åŒï¼Œk++
 			++k;
 		}
 		else
-		{//Èç¹û²»Í¬£¬°ÑkÖÃÒ»£¬²¢¸üĞÂnowceng
+		{//å¦‚æœä¸åŒï¼ŒæŠŠkç½®ä¸€ï¼Œå¹¶æ›´æ–°nowceng
 			k = 1;
 			nowCeng = array[i].ceng;
 		}
@@ -113,11 +112,11 @@ int GetWeigth(pTree p)
 	}
 	return max;
 }
-//Ê¾ÀıÊäÈë
+//ç¤ºä¾‹è¾“å…¥
 /*
 ABD##E##CF###
-²ã´Î±éÀú½á¹ûÈçÏÂ
+å±‚æ¬¡éå†ç»“æœå¦‚ä¸‹
 ABCDEF
-Õâ¿ÃÊ÷¿í¶ÈÎª£º3
+è¿™æ£µæ ‘å®½åº¦ä¸ºï¼š3
 Press any key to continue
 */
