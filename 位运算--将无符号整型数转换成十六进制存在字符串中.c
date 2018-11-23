@@ -16,6 +16,12 @@ char *ui2hex(unsigned n,char *s)
 	int flag = 0;
 	char *p = s;
 	char info[] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+	if(n == 0)//如果本来就是0，则直接把s设置为0并返回
+	{
+		s[0] = '0';
+		s[1] = '\0';
+		return s;
+	}
 	for(;mask;mask>>=4)//从左到右，每次读取四位，判断是否大于0
 	{
 		temp = mask&n;
