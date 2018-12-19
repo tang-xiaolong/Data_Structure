@@ -6,6 +6,7 @@ int Plus(int a,int b);
 int Subtraction(int a,int b);
 int Multiply(int a,int b);
 int Devide(int a,int b);
+int isLow(int value);//是否是负数
 int main(void)
 {
 	int a,b,result = 0;
@@ -59,7 +60,8 @@ int Multiply(int a,int b)
 	int flag = 1,i,c = a;
 	if(a == 0 || b == 0)
 		return 0;
-	else if(b < 0)
+	else if(isLow(b))
+	//else if(b < 0)
 	{
 		flag = -1;
 		//b = b * -1;//保证b是正数
@@ -78,17 +80,24 @@ int Devide(int a,int b)
 	int flag = 1,i = 0,c = a;
 	if(a == 0 || b == 0)
 		return 0;
-	else if(b < 0)
+	else if(isLow(b))
+//	else if(b < 0)
 	{
 		flag = -1;
 		//b = b * -1;//保证b是正数
 		b = ~(b-1);
 	}
-	while((c - b) >= 0)
+	while(!isLow(c-b))//如果大于等于0，则要继续
 	{
 		++i;
 		c-=b;
 	}
 	return flag == 1?i:~(i-1);
 	//return i*flag;
+}
+int isLow(int value)//是否是负数
+{
+	if(value ^ ((~1u<<1>>1)^(~1u)))//判断符号位是0还是1
+		return 1;
+	return 0;
 }
