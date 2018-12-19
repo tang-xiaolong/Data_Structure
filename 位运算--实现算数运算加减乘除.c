@@ -77,13 +77,18 @@ int Multiply(int a,int b)
 int Devide(int a,int b)
 {
 	//不断得减，直到无法再减
-	int flag = 1,i = 0,c = a;
+	//这里出了一个问题，如果a是负数则会出问题，所以还需要判断一下a的符号
+	int flag1 = 1,flag2 = 1,i = 0,c = a;
+	if(isLow(c))
+	{
+		flag1 = -1;
+		c = ~(c-1);
+	}
 	if(a == 0 || b == 0)
 		return 0;
 	else if(isLow(b))
-//	else if(b < 0)
 	{
-		flag = -1;
+		flag2 = -1;
 		//b = b * -1;//保证b是正数
 		b = ~(b-1);
 	}
@@ -92,12 +97,12 @@ int Devide(int a,int b)
 		++i;
 		c-=b;
 	}
-	return flag == 1?i:~(i-1);
+	return (flag1*flag2) == 1?i:~(i-1);
 	//return i*flag;
 }
 int isLow(int value)//是否是负数
 {
-	if(value ^ ((~1u<<1>>1)^(~1u)))//判断符号位是0还是1
+	if(value & ((~1u<<1>>1)^(~1u)))//判断符号位是0还是1
 		return 1;
 	return 0;
 }
