@@ -1,0 +1,103 @@
+两种思路，第二种是在第一种思路上做了个优化
+思路一（时间复杂度O(n^2)，空间复杂度O(n^2)）
+内部四个循环分别负责不同方向的延伸，当一个方向无法继续延伸了则切换到另一个方向。同时用一个标志数组做记录，记录每个数字是否已经被访问过了
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        vector<int> res;
+        if(matrix.size() == 0)
+            return res;
+        int height = matrix.size();
+        int width = matrix[0].size();
+        vector<vector<int>> tempVec;
+        for(int i = 0;i < height;++i)
+        {
+            vector<int> obj;
+            for(int j = 0;j < width;++j)
+            {
+                obj.push_back(0);
+            }
+            tempVec.push_back(obj);
+        }
+        int i = 0,j = 0;
+        int totalNum = height * width;
+        res.push_back(matrix[i][j]);
+        tempVec[i][j] = 1;
+        while(res.size() < totalNum)
+        {
+            while(j + 1 < width && tempVec[i][j + 1] == 0)//未到边界且没有使用过
+            {
+                j = j + 1;
+                res.push_back(matrix[i][j]);
+                tempVec[i][j] = 1;
+            }
+            while(i + 1 < height && tempVec[i + 1][j] == 0)
+            {
+                i = i + 1;
+                res.push_back(matrix[i][j]);
+                tempVec[i][j] = 1;
+            }
+            while(j - 1 >= 0 && tempVec[i][j - 1] == 0)
+            {
+                j = j - 1;
+                res.push_back(matrix[i][j]);
+                tempVec[i][j] = 1;
+            }
+            while(i - 1 >= 0 && tempVec[i - 1][j] == 0)    
+            {
+                i = i - 1;
+                res.push_back(matrix[i][j]);
+                tempVec[i][j] = 1;
+            }
+        }
+        return res;
+    }
+};
+
+
+
+
+思路二（时间复杂度O(n^2)，空间复杂度O(1)）
+同样是延伸的思路，不过不再通过标志数组来限制范围了，而是直接显示四个方向能够到达的边界位置，同时在加入的时候判断加入的数个数，因为中间可能有数字被多次访问，因为内部的循环之间不具备实时性
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        vector<int> res;
+        if(matrix.size() == 0)
+            return res;
+        int height = matrix.size();
+        int width = matrix[0].size();
+        int leftLimit = 0,rightLimit = width - 1;//记录当前能够进入的边界值
+        int topLimit = 0,bottomLimit = height - 1;
+        int i = 0,j = -1;
+        int totalNum = height * width;
+        while(res.size() < totalNum)
+        {
+            while(j + 1 <= rightLimit)//未到边界且没有使用过
+            {
+                j = j + 1;
+                res.push_back(matrix[i][j]);
+            }
+            topLimit++;
+            while(i + 1 <= bottomLimit && res.size() < totalNum)
+            {
+                i = i + 1;
+                res.push_back(matrix[i][j]);
+            }
+            rightLimit--;
+            while(j - 1 >= leftLimit && res.size() < totalNum)
+            {
+                j = j - 1;
+                res.push_back(matrix[i][j]);
+            }
+            bottomLimit--;
+            while(i - 1 >= topLimit && res.size() < totalNum)
+            {
+                i = i - 1;
+                res.push_back(matrix[i][j]);
+            }
+            leftLimit++;
+        }
+        return res;
+    }
+};
