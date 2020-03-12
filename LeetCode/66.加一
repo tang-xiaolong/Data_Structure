@@ -1,0 +1,33 @@
+class Solution {
+public:
+    vector<int> plusOne(vector<int>& digits) {
+        //直接加，反着加，最后翻转
+        vector<int> res;
+        int go = 1;//默认的进位
+        int len = digits.size();
+        int l,r,temp;
+        for(int i = len - 1;i >= 0;--i)
+        {
+            go = digits[i] + go;
+            if(go > 9)
+                res.push_back(0);
+            else
+                res.push_back(go);
+            go = go > 9?1:0;
+        }
+        if(go != 0)
+            res.push_back(1);
+        //翻转
+        l = 0;
+        r = res.size() - 1;
+        while(l < r)
+        {
+            temp = res[l];
+            res[l] =  res[r];
+            res[r] = temp;
+            ++l;
+            --r;
+        }
+        return res;
+    }
+};
