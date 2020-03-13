@@ -1,0 +1,53 @@
+class Solution {
+public:
+    string addBinary(string a, string b) {
+    //如果两个都未结束，则从后往前加
+    int indexA = a.size() - 1,indexB = b.size() - 1;
+    int preValue = 0,len = 0,l = 0,r = 0;
+    string res = "";
+    char temp1,temp2;
+    while(indexA >= 0 || indexB >= 0)//只做加法
+    {
+        temp1 = indexA >= 0?a[indexA]:'0';
+        temp2 = indexB >= 0?b[indexB]:'0';
+        temp1 = temp1 - '0' + temp2;
+        res = res + temp1;
+        indexA--;
+        indexB--;
+    }
+    //对这个res做处理
+    len = res.size();
+    preValue = 0;
+    for(int i = 0;i < len;++i)
+    {
+        preValue = res[i] - '0' + preValue;
+        if(preValue > 1)//处理进位
+        {
+            temp1 = preValue - 2 + '0';
+            preValue /= 2;
+        }
+        else
+        {
+            temp1 = preValue + '0';
+            preValue = 0;
+        }
+        res[i] = temp1;
+    }
+    if(preValue != 0)
+    {
+        temp1 = preValue + '0';
+        res = res + temp1;
+    }
+    l = 0;
+    r = res.size() - 1;
+    while(l < r)
+    {
+        temp1 = res[l];
+        res[l] = res[r];
+        res[r] = temp1;
+        l++;
+        r--;
+    }
+    return res;
+    }
+};
