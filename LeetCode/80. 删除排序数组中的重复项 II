@@ -1,0 +1,29 @@
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        //记录重复元素个数
+        int len = nums.size();
+        int repeatCount = 0,tempRepeatCount = 0;
+        int preNum = 0;
+        if(len <= 2)
+            return len;
+        preNum = nums[0];
+        for(int i = 1;i < len;++i)
+        {
+            if(nums[i] == preNum)//这个数和前面的数重复了
+                tempRepeatCount++;
+            else//不重复，则记录新的数
+            {
+                preNum = nums[i];
+                tempRepeatCount = 0;
+            }
+            if(tempRepeatCount >= 2)//重复2次了，那这个数就没用了
+            {
+                repeatCount++;
+            }
+            else
+                nums[i - repeatCount] = nums[i];
+        }
+        return len - repeatCount;
+    }
+};
