@@ -1,0 +1,74 @@
+//具体思路分析可以移驾到https://blog.csdn.net/l1606468155/article/details/104870644 查看图文解释
+class Solution {
+public:
+    void SwapTwoVector(vector<vector<int>>& intervals,int i,int j)//交换两个向量
+    {
+        int temp = intervals[i][0];
+        intervals[i][0] = intervals[j][0];
+        intervals[j][0] = temp;
+        temp = intervals[i][1];
+        intervals[i][1] = intervals[j][1];
+        intervals[j][1] = temp;
+    }
+    void Write2Vector(vector<vector<int>>& res,int leftValue,int rightValue)//往结果里写入一个区间
+    {
+        vector<int> tempVec;
+        tempVec.push_back(leftValue);
+        tempVec.push_back(rightValue);
+        res.push_back(tempVec);
+    }
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        //先按照左端点做一个排序（升序），左端点相同的根据右端点大小排。最后每次挨个判断前一个区间和后一个区间的关系
+        //主要包含以下几种：
+        // 1、包含（后区间的左端点大于等于前区间左端点，后区间的右端点小于等于前区间的右端点）
+        // 2、相交(后区间左端点小于等于前区间的右端点，后区间的右端点大于前区间右端点)
+        // 3、相离（后区间左端点值大于前区间右端点的值）
+        int len = intervals.size();
+        int flag = 0,preLeft,preRight,lateLeft,lateRight,k = 0;
+        vector<vector<int>> res;
+        if(0 == len)
+            return res;
+        //sort
+        for(int i = 0;i < len;++i)
+        {
+            flag = 0;
+            for(int j = len - 1;j > i;--j)
+            {
+                if(intervals[j][0] < intervals[j-1][0])//左小则换
+                {
+                    SwapTwoVector(intervals,j - 1,j);
+                    flag = 1;
+                }
+                else if(intervals[j][0] == intervals[j-1][0] && intervals[j][1] < intervals[j - 1][1])//左等右小，则换
+                {
+                    SwapTwoVector(intervals,j - 1,j);
+                    flag = 1;
+                }
+            }
+            if(0 == flag)
+                break;
+        }
+        //merge
+        preLeft = intervals[0][0];
+        preRight = intervals[0][1];
+        for(int i = 1;i < len;++i)
+        {
+            //拿到当前元素的左右区间
+            lateLeft = intervals[i][0];
+            lateRight = intervals[i][1];
+            if(lateLeft >= preLeft && lateRight <= preRight)//包含 则后区间贡献为0,
+                continue;
+            else if(lateLeft <= preRight && lateRight > preRight)//相交 则更新前区间的右端点 此时还不能写入,因为可能继续合并
+                preRight = lateRight;
+            else
+            {
+                Write2Vector(res,preLeft,preRight);
+                preLeft = lateLeft;
+                preRight = lateRight;
+            }
+        }
+        Write2Vector(res,preLeft,preRight);
+        return res;
+    }
+};
+
