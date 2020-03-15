@@ -1,0 +1,41 @@
+class Solution {
+public:
+    vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+        int len = intervals.size();
+        vector<vector<int>> res;
+        if(len == 0)
+        {
+            res.push_back(newInterval);
+            return res;
+        }
+        bool haveHandled = false;
+        vector<int> tempVec = newInterval;
+        for(int i = 0;i < len;++i)
+        {
+            if(haveHandled || tempVec[0] > intervals[i][1])//需要加入的区间左端点大于当前的右区间
+                res.push_back(intervals[i]);
+            else
+            {
+                //如果待加入的右端点小于当前的左端点，则直接把它和自己都加进去
+                if(tempVec[1] < intervals[i][0])
+                {
+                    haveHandled = true;
+                    res.push_back(tempVec);
+                    res.push_back(intervals[i]);
+                }
+                else if(tempVec[1] <= intervals[i][1])//待插入区间右端点 小于等于 当前区间右端点
+                {
+                    haveHandled = true;
+                    tempVec[0] = tempVec[0] < intervals[i][0]?tempVec[0]:intervals[i][0];
+                    tempVec[1] = intervals[i][1];
+                    res.push_back(tempVec);
+                }
+                else if(tempVec[0] <= intervals[i][1])//需要加入的左端点和当前右端点重合了,则需要更新找到个区间长度了
+                    tempVec[0] = tempVec[0] < intervals[i][0]?tempVec[0]:intervals[i][0];
+            }
+        }
+        if(haveHandled == false)
+            res.push_back(tempVec);
+        return res;
+    }
+};
