@@ -1,0 +1,24 @@
+//思路：
+//使用res记录最后的结果，使用now记录在一个非空格后的字符最大长度。
+//中途如果是非空格则自增，出现空格，且now不为0（即在这个空格前是有其他字符的），则更新res，且将now置零随时做后面的计数。
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        int res = 0,now = 0;
+        int len = s.size();
+        if(0 == len)
+            return res;
+        for(int i = 0;i < len;++i)
+        {
+            if(s[i] != ' ')
+                now++;
+            else
+            {
+                res = now == 0?res:now;
+                now = 0;
+            }
+        }
+        res = now == 0?res:now;
+        return res;
+    }
+};
