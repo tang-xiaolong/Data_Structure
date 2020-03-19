@@ -1,0 +1,44 @@
+class Solution {
+public:
+    //如果是小写字符或者数字，直接返回true，如果是大写字母，转换成小写字母，返回true，否则返回false
+    bool IsValidChar(char* pC)
+    {
+        if(*pC >= 'a' && *pC <= 'z' || *pC >= '0' && *pC <= '9')
+            return true;
+        else if(*pC >= 'A' && *pC <= 'Z')
+        {
+            *pC = *pC - 'A' + 'a';
+            return true;
+        }
+        return false;
+    }
+    bool isPalindrome(string s) {
+        int len = s.size();
+        if(1 == len)
+            return true;
+        int l = 0,r = len - 1;
+        char lC,rC;
+        bool res = true;
+        while(l < r)
+        {
+            lC = s[l];
+            rC = s[r];
+            while(!IsValidChar(&lC) && l + 1 < r)//如果是无效字符，且还可以增加
+                lC = s[++l];
+            if(!IsValidChar(&lC))//如果最后得到的字符不可行，则表示在l到r之间的都是非法字符。故直接为true
+                break;
+            while(!IsValidChar(&rC) && r - 1 > l)//同理
+                rC = s[--r];
+            if(!IsValidChar(&rC))
+                break;
+            if(l > r || lC != rC)//如果此时的l和r不满足或者两个字符不相等，则为false
+            {
+                res = false;
+                break;
+            }
+            ++l;
+            --r;
+        }
+        return res;
+    }
+};
