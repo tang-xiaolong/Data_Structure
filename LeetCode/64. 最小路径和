@@ -1,0 +1,26 @@
+class Solution {
+public:
+    int minPathSum(vector<vector<int>>& grid) {
+        //计算网格的抵达权值，一行一行算
+        int height = grid.size();
+        if(height == 0 || grid[0].size() == 0)
+            return 0;
+        int width = grid[0].size();
+        int tempValue = 0;
+        //最上面一行等于左边+自己
+        //最左边一行等于上面+自己
+        //中间的等于min(上面，左边) + 自己
+        for(int j = 1;j < width;++j)
+            grid[0][j] += grid[0][j-1];
+        for(int i = 1;i < height;++i)
+            grid[i][0] += grid[i - 1][0];
+
+        for(int i = 1;i < height;++i)
+            for(int j = 1;j < width;++j)
+            {
+                tempValue = grid[i - 1][j] < grid[i][j - 1]?grid[i - 1][j]:grid[i][j - 1];
+                grid[i][j] += tempValue;    
+            }
+        return grid[height - 1][width - 1];
+    }
+};
