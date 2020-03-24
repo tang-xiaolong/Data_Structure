@@ -1,0 +1,44 @@
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+        int height,width;
+        if((height = matrix.size()) == 0 || (width = matrix[0].size()) == 0)
+            return;
+        //不能直接根据为0就处理后面的，因为后面的数会受前面的影响。
+        //也不能单纯的直接处理完i和j都加1缩小包围圈，因为后面还可能出现0是需要处理同行同列置0的
+        
+        //为了计算出矩阵元素的真正状态，它得知道它这一行或者一列是否有元素初始就为0   类似十字链表
+        //可以先记录下第一行和第一列是否有元素初始为0，然后利用这m+n个元素来保存初始0的信息，最后再回来处理第一行和第一列
+        int firstRow = 1,firstCol = 1;
+        for(int i = 0;i < height;++i)
+        {
+            for(int j = 0;j < width;++j)
+            {
+                if(matrix[i][j] == 0)//初始0，需要记录这一行和这一列的信息
+                {
+                    if(i == 0)
+                        firstRow = 0;
+                    if(j == 0)
+                        firstCol = 0;
+                    matrix[0][j] = matrix[i][0] = 0;
+                }
+            }
+        }
+        for(int i = 1;i < height;++i)
+        {
+            for(int j = 1;j < width;++j)
+            {
+                if(matrix[0][j] == 0 || matrix[i][0] == 0)
+                {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+        if(firstRow == 0)
+            for(int j = 0;j < width;++j)
+                matrix[0][j] = 0;
+        if(firstCol == 0)
+            for(int i = 0;i < height;++i)
+                matrix[i][0] = 0;
+    }
+};
