@@ -1,0 +1,59 @@
+class Solution {
+public:
+    void SwapStr(string &res,int l,int r)
+    {
+        char c;
+        while(l < r)
+        {
+            c = res[l];
+            res[l] = res[r];
+            res[r] = c;
+            ++l;
+            --r;
+        }
+    }
+    string getPermutation(int n, int k) {
+        string res = "";
+        char tempC[10]  = "123456789";
+        //先得到从小到大排列的n个数的字符串。
+        //在整个排列过程中，我们需要让数字尽可能得小。
+        //当n确定时，以1开始的有(n-1)!种排列，即定下第一位后面n-1位全排列。同理，以任意数字开始的也是(n-1)!种。())
+        //可以根据k算出是用哪个数字开头，然后剩下的就是子问题了
+        for(int i = 0;i < n;++i)
+            res.push_back(tempC[i]);
+        int l = 0,r = n - 1;
+        int fac = 1;
+        int swapIndex = 0;
+        char c;
+        for(int i = 1;i <= n - 1;++i)
+            fac*=i;
+        while(k > 1)
+        {
+            if(k == fac * (r - l + 1))//正好逆序排
+            {
+                SwapStr(res,l,r);
+                break;
+            }
+            //如果k大于fac，才可能换到后面的数字
+            if(k == fac)//从l往后正好逆序排
+            {
+                SwapStr(res,l + 1,r);
+                break;
+            }
+            swapIndex = k / fac;
+            k -= swapIndex * fac;//余数
+            //余数为0，说明正好把swapIndex-1和l换掉了，且后面正好逆序
+            if(k == 0)//整除，则移除得的结果少一位，且后面正好需要逆序
+                swapIndex--,k = fac;
+
+            //不为0则表示可以把对应的数移到l位来，记得中途保持大小
+            c = res[l + swapIndex];
+            for(int i = l + swapIndex - 1;i >= l;--i)//把l到(l + swapIndex - 1)的数往后移
+                res[i + 1] = res[i];
+            res[l] = c;
+            fac /= (r - l);//更新当前的阶乘
+            l++;//左指针偏移
+        }
+        return res;
+    }
+};
