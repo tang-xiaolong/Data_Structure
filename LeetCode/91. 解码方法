@@ -1,0 +1,25 @@
+#include<malloc.h>
+int numDecodings(char * s) {
+	if (s[0] == '0')
+		return 0;
+	int len = 0,tempValue = 0;
+	int dp[3] = {1,1,1};
+	char * p = s,ch,pCh;
+	while (*p++)
+		len++;
+	if (len == 1)
+		return 1;
+	for (int i = 1; i < len; ++i)
+	{
+		ch = s[i];
+		pCh = s[i - 1];
+		if (ch == '0')
+			dp[2] = 0;
+		tempValue = (pCh - '0') * 10 + ch - '0';
+		if (tempValue > 9 && tempValue <= 26)
+			dp[2] += dp[0];
+		dp[0] = dp[1];
+		dp[1] = dp[2];
+	}
+	return dp[2];
+}
