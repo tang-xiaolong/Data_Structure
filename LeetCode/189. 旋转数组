@@ -1,0 +1,24 @@
+class Solution {
+public:
+    void Revert(vector<int>& nums, int l,int r)
+    {
+        int tempValue = 0;
+        while(l < r)
+        {
+            tempValue = nums[l];
+            nums[l] = nums[r];
+            nums[r] = tempValue;
+            ++l;
+            --r;
+        }
+    }
+    void rotate(vector<int>& nums, int k) {
+        if(0 == k)
+            return;
+        int n = nums.size();
+        k %= n;
+        Revert(nums,0,n - k - 1);
+        Revert(nums,n - k,n - 1);
+        Revert(nums,0,n - 1);
+    }
+};
