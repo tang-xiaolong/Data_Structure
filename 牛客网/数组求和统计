@@ -1,0 +1,25 @@
+class Solution {
+public:
+    /**
+     * 计算有多少对符合条件的数对
+     * @param a int整型vector 数组a
+     * @param b int整型vector 数组b
+     * @return int整型
+     */
+    int countLR(vector<int>& a, vector<int>& b) {
+        // write code here
+        long tempSum = 0;
+        int n = a.size(),res = 0;
+        for(int i = 0;i < n;++i)
+        {
+            tempSum = - b[i];
+            for(int j = i;j < n;++j)
+            {
+                tempSum += a[j];
+                if(tempSum == b[j])
+                    ++res;
+            }
+        }
+        return res;
+    }
+};
