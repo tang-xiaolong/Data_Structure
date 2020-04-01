@@ -1,0 +1,40 @@
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        //行递增，且后一行的第一个元素比前一行最后一个大
+        //判断是否在当前行的范围内，如果不在，切换到下一行
+        int curRow = 0,flag = 0;
+        int m,n,l,r,mid;
+        bool res = false;
+        m = matrix.size();
+        if(m == 0 || (n = matrix[0].size()) == 0)
+            return res;
+        for(curRow = 0;curRow < m;)
+        {
+            l = 0;
+            r = n - 1;
+            //如果要查找的数比左边界小，则直接退出
+            if(target < matrix[curRow][l])
+                break;
+            else if(target > matrix[curRow][r])//如果比右边界大，则curRow加1
+                curRow++;
+            else
+            {
+                //二分法在该行查找
+                while(l <= r)
+                {
+                    mid = (l + r) / 2;
+                    if(matrix[curRow][mid] == target)//找到了
+                        return true;
+                    else if(matrix[curRow][mid] < target)
+                        l = mid + 1;
+                    else 
+                        r = mid - 1;
+                }
+                res = false;
+                break;
+            }
+        }
+        return res;
+    }
+};
