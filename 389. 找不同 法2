@@ -1,0 +1,9 @@
+char findTheDifference(char * s, char * t){
+//法二：使用异或去除重复项
+    int res = 0;
+    while(*s)
+        res ^= *s++;
+    while(*t)
+        res ^= *t++;
+    return res;
+}
