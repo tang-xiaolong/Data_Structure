@@ -1,0 +1,18 @@
+char findTheDifference(char * s, char * t){
+    //法一：哈希表记录字符出现次数，第二次直接做减法，然后看哪个变成-1就是哪个
+    int countArray[26] = {0};
+    while(*s)
+    {
+        countArray[*s - 'a']++;
+        s++;
+    }
+    while(*t)
+    {
+        countArray[*t - 'a']--;
+        if(countArray[*t - 'a'] < 0)
+            return *t;
+        t++;
+    }
+    return '\0';
+
+}
