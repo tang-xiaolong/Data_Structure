@@ -1,0 +1,33 @@
+class Solution {
+public:
+    /**
+     * 算法交流群
+     * @param n int整型 群员个数
+     * @param a int整型vector 群员的等级
+     * @param p int整型vector 群友寻求帮助的人
+     * @param k int整型vector 群友产生的问题等级
+     * @return int整型vector
+     */
+    vector<int> solve(int n, vector<int>& a, vector<int>& p, vector<int>& k) {
+        // write code here
+        vector<int> res(n,0);
+        for(int i = 0;i < n;++i)//分别看他们的问题被谁解决或者无法解决
+        {
+            if(k[i] > a[0])
+                continue;
+            else if(k[i] == a[0])//群主等级最高
+                res[0]++;
+            else if(a[i] >= k[i])
+                res[i]++;
+            else//判断他们自己是否可以解决
+            {
+                //查看谁能帮自己解决，肯定有人能帮自己解决的，最多到群主那里
+                int j = i;
+                while(a[j] < k[i])//a[j]是等级，p[j - 1]为求助的对象
+                    j = p[j - 1] - 1;
+                res[j]++;
+            }
+        }
+        return res;
+    }
+};
