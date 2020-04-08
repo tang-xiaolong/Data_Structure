@@ -1,0 +1,31 @@
+class Solution {
+public:
+    void Resolve(int n,int nowIndex,vector<int> &nums,vector<vector<int>> &res,vector<int> &temp)
+    {
+        if(nowIndex  >= n)
+        {
+            res.push_back(temp);
+            return;
+        }
+        //不取当前的元素
+        Resolve(n,nowIndex + 1,nums,res,temp);
+        //取当前元素
+        temp.push_back(nums[nowIndex]);
+        Resolve(n,nowIndex + 1,nums,res,temp);
+        temp.pop_back();
+    }
+    vector<vector<int>> subsets(vector<int>& nums) {
+        //每个位置可以取或者不取
+        vector<int> temp;
+        vector<vector<int>> res;
+        int n = nums.size();
+        if(n == 0)
+        {
+            res.push_back(temp);
+            return res;
+        }
+        Resolve(n,0,nums,res,temp);
+        return res;
+
+    }
+};
