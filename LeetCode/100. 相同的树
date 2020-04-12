@@ -1,0 +1,28 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+
+    bool IsSame(TreeNode* p, TreeNode* q)
+    {
+        //如果有一个节点为空而另一个节点不为空，返回false
+        if(p == NULL && q != NULL || p != NULL && q == NULL)
+            return false;
+        //如果有一个节点为空，那说明两个都为空
+        if(p == NULL)
+            return true;
+        if(p->val != q->val)
+            return false;
+        return IsSame(p->left,q->left) && IsSame(p->right,q->right);
+    }
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        return IsSame(p,q);
+    }
+};
